@@ -1,5 +1,4 @@
 spring:
-    cassandra:
-      local-datacenter: datacenter1
-      keyspace-name: tacocloud
-      schema-action: recreate
+  data:
+    mongodb:
+      database: taco-cloud

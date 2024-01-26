@@ -1,31 +1,28 @@
 package tacos;
 
-import com.datastax.oss.driver.api.core.uuid.Uuids;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.validator.constraints.CreditCardNumber;
-import org.springframework.data.cassandra.core.mapping.Column;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Data
-@Table("orders")
+@Document
 public class TacoOrder implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @PrimaryKey
-    private UUID id = Uuids.timeBased();
+    @Id
+    private String id;
 
     private Date placedAt = new Date();
     @NotBlank(message = "Delivery name is required")
@@ -45,9 +42,8 @@ public class TacoOrder implements Serializable {
     @Digits(integer = 3, fraction = 0, message = "Credit card CVV is invalid")
     private String ccCVV;
 
-    @Column("tacos")
     @Size(min = 1, message = "You must choose at least one taco")
-    private List<TacoUDT> tacos = new ArrayList<>();
+    private List<Taco> tacos = new ArrayList<>();
 
     @Serial
     private void writeObject(ObjectOutputStream out) throws IOException {
@@ -60,6 +56,6 @@ public class TacoOrder implements Serializable {
     }
 
     public void addTaco(Taco taco) {
-        tacos.add(new TacoUDT(taco));
+        tacos.add(taco);
     }
 }
