@@ -1,6 +1,5 @@
 package tacos.web;
 
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -21,7 +20,7 @@ import java.sql.SQLException;
 @SessionAttributes("tacoOrder")
 public class OrderController {
 
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
     public OrderController(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
@@ -33,7 +32,6 @@ public class OrderController {
     }
 
     @PostMapping
-    @Transactional
     public String processOrder(@Valid TacoOrder order, Errors errors, SessionStatus sessionStatus) throws SQLException {
         if (errors.hasErrors()) {
             return "orderForm";

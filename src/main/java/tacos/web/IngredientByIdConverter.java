@@ -5,10 +5,11 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import tacos.Ingredient;
+import tacos.IngredientUDT;
 import tacos.data.IngredientRepository;
 
 @Component
-public class IngredientByIdConverter implements Converter<String, Ingredient> {
+public class IngredientByIdConverter implements Converter<String, IngredientUDT> {
 
     private final IngredientRepository ingredientRepo;
 
@@ -17,8 +18,12 @@ public class IngredientByIdConverter implements Converter<String, Ingredient> {
     }
     @Override
     @Nullable
-    public Ingredient convert(@NonNull String id) {
-            return ingredientRepo.findById(id).orElse(null);
+    public IngredientUDT convert(@NonNull String id) {
+        Ingredient ingredient = ingredientRepo.findById(id).orElse(null);
+        if (ingredient == null) {
+            return null;
+        }
+        return new IngredientUDT(ingredient);
     }
     
 }
